@@ -1,38 +1,39 @@
-import groq  # Assuming this is for LLM use case, replace with GroQ or Gemini API if available
 import requests
 import json
 
-# Replace with the actual API client for GroQ or Gemini
-def generate_use_cases_with_gemini_or_groq(snippets):
-    """
-    This function uses the GroQ or Gemini API to generate AI/ML use cases based on the provided company data.
-    Here, we'll assume an example of using a model via an API.
-    """
+# Replace this with your actual GroQ API key
+API_KEY = ""  # Get this from https://console.groq.com/keys
 
-    # Combine the snippets into a prompt (just like we would with GPT)
+def generate_use_cases_with_groq(snippets):
+    """
+    This function uses the GroQ API to generate AI/ML use cases based on the provided company data.
+    """
+    
+    # Combine the snippets into a single string prompt
     combined_snippets = ""
     for key, values in snippets.items():
         combined_snippets += f"{key}:\n" + "\n".join(values) + "\n\n"
     
-    # Create a request payload with the combined snippets as a prompt
+    # Prepare the payload for the GroQ API request
     payload = {
-        "model": "groq-gemini-model",  # Use the correct model name or API endpoint
+        "model": "groq-model-v1",  # Replace with the actual GroQ model name (check GroQ documentation)
         "prompt": f"Based on the following company and industry information, generate relevant use cases for AI/ML technologies (Generative AI, LLMs, Machine Learning) that can improve processes, customer satisfaction, and operational efficiency.\n\nInformation:\n{combined_snippets}\n\nPlease generate 5 use cases.",
         "max_tokens": 500,  # Adjust as necessary
-        "temperature": 0.7,  # Adjust temperature to control creativity
+        "temperature": 0.7,  # Adjust for creativity
     }
 
-    # Send the request to the model API (Example with requests, adjust to Gemini or GroQ API)
-    api_url = "https://api.gemini.com/v1/generate_use_cases"  # Replace with actual API URL
+    # Define the API endpoint for GroQ
+    api_url = "https://api.groq.com/v1/generate"  # Replace with actual GroQ API URL
     headers = {
-        "Authorization": "Bearer your-api-key-here",  # Replace with actual API key
+        "Authorization": f"Bearer {API_KEY}",  # Include your GroQ API key
         "Content-Type": "application/json",
     }
 
+    # Send the request to the GroQ API
     response = requests.post(api_url, headers=headers, data=json.dumps(payload))
     
     if response.status_code == 200:
-        return response.json()["use_cases"]
+        return response.json().get("use_cases", [])
     else:
         return {"error": f"Error: {response.status_code}, {response.text}"}
 
@@ -52,9 +53,10 @@ snippets = {
     "infosys supply chain strategy": ["Infosys accelerates transformation with custom models for supply chain..."]
 }
 
-use_cases = generate_use_cases_with_gemini_or_groq(snippets)  # Generate use cases
+# Generate use cases with GroQ
+use_cases = generate_use_cases_with_groq(snippets)
 
-# Save responses to a file
+# Save the generated use cases to a file
 save_use_cases_to_file(use_cases, "generated_use_cases.json")  # Save to file
 
 # Print out the results for review
