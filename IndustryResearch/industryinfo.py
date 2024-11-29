@@ -90,7 +90,7 @@ def search_with_serpapi(query):
     params = {
         "q": query,
         "api_key": SERPAPI_API_KEY,  # Replace with your actual API key
-        "num": 10  # Number of results to fetch
+        "num": 2  # Number of results to fetch
     }
     url = "https://serpapi.com/search"
     response = requests.get(url, params=params)
